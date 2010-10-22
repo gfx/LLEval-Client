@@ -9,7 +9,7 @@ plan skip_all => q{Test::Spelling or spell(1) is not available.}
 my @stopwords;
 while(my $line = <DATA>) {
     $line =~ s/ \# [^\n]+ //xms;
-    push @stopwords, $line =~ /(\w+)/g;
+    push @stopwords, $line =~ /([\w']+)/g;
 }
 add_stopwords(@stopwords);
 
@@ -20,6 +20,7 @@ __DATA__
 gfx
 gfuji@cpan.org
 LLEval
+dankogai's
 
 # computer terms
 API
