@@ -27,6 +27,14 @@ has oneliner => (
     required     => 0,
 );
 
+has list => (
+    traits       => ['MouseX::Getopt::Meta::Attribute::Trait'],
+    cmd_aliases  => ['q'],
+    is           => 'ro',
+    isa          => 'Bool',
+    required     => 0,
+);
+
 has debug => (
     traits       => ['MouseX::Getopt::Meta::Attribute::Trait'],
     cmd_aliases  => ['d'],
@@ -37,6 +45,14 @@ has debug => (
 
 sub run {
     my($self) = @_;
+
+    if($self->list) {
+        my $langs = $lleval->languages;
+        foreach my $ext(sort keys %{$langs}) {
+            printf "  %-6s %s\n", $ext, $langs->{$ext};
+        }
+        return 0;
+    }
 
     my $source = $self->oneliner;
     my @argv;
