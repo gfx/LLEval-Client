@@ -99,7 +99,7 @@ __END__
 
 =head1 NAME
 
-LLEval - Perl extention to do something
+LLEval - Perl interface to dankogai's LLEval service
 
 =head1 VERSION
 
@@ -107,11 +107,19 @@ This document describes LLEval version 0.01.
 
 =head1 SYNOPSIS
 
-    use LLEval;
+    In fuzzbuzz.p6
+    #!lleval
+    # This is a Perl6 script
+    [1..30].map({
+      { $^n % 3 ?? '' !! 'Fizz' }($_)
+      ~
+      { $^n % 5 ?? '' !! 'Buzz' }($_)
+      || $_
+    }).join("\n").say;
 
 =head1 DESCRIPTION
 
-# TODO
+This is a Perl interface to dankogai's LLEval service.
 
 =head1 INTERFACE
 
@@ -129,7 +137,7 @@ to cpan-RT.
 
 =head1 SEE ALSO
 
-L<Dist::Maker::Template::Mouse>
+L<http://colabv6.dan.co.jp/lleval.html>
 
 =head1 AUTHOR
 
