@@ -1,0 +1,30 @@
+---
+abstract: 'Perl extention to do something'
+author:
+  - 'gfx <gfuji@cpan.org>'
+build_requires:
+  ExtUtils::MakeMaker: 6.42
+  Test::More: 0.88
+configure_requires:
+  ExtUtils::MakeMaker: 0
+distribution_type: module
+dynamic_config: 0
+generated_by: 'ExtUtils::MakeMaker version 6.57_06'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: LLEval
+no_index:
+  directory:
+    - t
+    - inc
+requires:
+  Furl: 0
+  JSON: 0
+  Mouse: 0.7
+  MouseX::Getopt: 0
+  MouseX::StrictConstructor: 0.02
+  URI::Escape: 0
+  perl: 5.008001
+version: 0.01
