@@ -17,6 +17,7 @@ has lang => (
     cmd_aliases  => ['l'],
     is           => 'rw',
     isa          => $LANG,
+    documentation=> 'Specifies the language to execute'
 );
 
 has oneliner => (
@@ -25,6 +26,7 @@ has oneliner => (
     is           => 'ro',
     isa          => 'Str',
     required     => 0,
+    documentation=> 'Specifies the one-line script',
 );
 
 has list => (
@@ -33,6 +35,7 @@ has list => (
     is           => 'ro',
     isa          => 'Bool',
     required     => 0,
+    documentation=> 'Shows the list of supported languages (ext - command)',
 );
 
 has debug => (
@@ -41,6 +44,7 @@ has debug => (
     is           => 'ro',
     isa          => 'Bool',
     required     => 0,
+    documentation=> 'Enables debugging mode',
 );
 
 sub run {
@@ -49,7 +53,7 @@ sub run {
     if($self->list) {
         my $langs = $lleval->languages;
         foreach my $ext(sort keys %{$langs}) {
-            printf "  %-6s %s\n", $ext, $langs->{$ext};
+            printf "  %-6s - %s\n", $ext, $langs->{$ext};
         }
         return 0;
     }
