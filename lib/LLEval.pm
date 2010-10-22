@@ -107,7 +107,7 @@ This document describes LLEval version 0.01.
 
 =head1 SYNOPSIS
 
-    In fuzzbuzz.p6
+    In fuzzbuzz.p6:
     #!lleval
     # This is a Perl6 script
     [1..30].map({
@@ -116,6 +116,9 @@ This document describes LLEval version 0.01.
       { $^n % 5 ?? '' !! 'Buzz' }($_)
       || $_
     }).join("\n").say;
+
+    Or from the shell:
+    lleval -x hs 'main = putStrLn "Hello, Haskell world!"'
 
 =head1 DESCRIPTION
 

@@ -14,7 +14,7 @@ my $LANG = enum __PACKAGE__ . '.lang' => (
 
 has lang => (
     traits       => ['MouseX::Getopt::Meta::Attribute::Trait'],
-    cmd_aliases  => ['l'],
+    cmd_aliases  => ['l', 'x'],
     is           => 'rw',
     isa          => $LANG,
     documentation=> 'Specifies the language to execute'
