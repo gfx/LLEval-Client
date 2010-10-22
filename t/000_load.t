@@ -7,7 +7,5 @@ BEGIN {
 }
 
 diag "Testing LLEval/$LLEval::VERSION";
-eval { require Moose };
-diag "Moose/$Moose::VERSION";
 eval { require Mouse };
 diag "Mouse/$Mouse::VERSION";

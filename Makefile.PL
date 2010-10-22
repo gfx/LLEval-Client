@@ -6,6 +6,8 @@ use Module::Install::Repository;
 
 all_from 'lib/LLEval.pm';
 
+install_script 'lleval';
+
 requires 'Furl';
 requires 'JSON';
 requires 'URI::Escape';
