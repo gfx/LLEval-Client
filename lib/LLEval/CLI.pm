@@ -49,6 +49,9 @@ sub run {
         $source = <$in>;
 
         ($ext) = $file =~ /\. ([^.]+) \z/xms;
+        if(defined $ext) {
+            $LANG->assert_valid($ext);
+        }
     }
     else {
         @argv = @{$self->extra_argv};
