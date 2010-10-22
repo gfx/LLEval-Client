@@ -3,7 +3,7 @@ This is Perl module LLEval.
 SYNOPSIS
 
     lleval -x p6 -e '"Hello, Perl6 world!".say'
-    lleval -x hs -e 'main = putStrLn "Hello, Haskell world!'
+    lleval -x hs -e 'main = putStrLn "Hello, Haskell world!"'
 
 INSTALLATION
 
