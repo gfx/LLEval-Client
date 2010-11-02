@@ -46,14 +46,14 @@ sub call {
             uri_escape_utf8($key), uri_escape_utf8($value);
     }
     #warn $path_query;
-    my($code, $msg, undef, $body) = $self->_furl->request(
+    my $res = $self->_furl->request(
         host       => $self->api_host,
         path_query => $path_query,
     );
-    if($code != 200) {
-        confess "API Error: $code $msg";
+    if($res->code != 200) {
+        confess "API Error: ", $res->status_line;
     }
-    return $self->_json->decode($body);
+    return $self->_json->decode($res->content);
 }
 
 sub call_eval {

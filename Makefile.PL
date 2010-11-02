@@ -8,7 +8,7 @@ all_from 'lib/LLEval.pm';
 
 install_script 'lleval';
 
-requires 'Furl';
+requires 'Furl'         => 0.07;
 requires 'JSON';
 requires 'URI::Escape';
 
