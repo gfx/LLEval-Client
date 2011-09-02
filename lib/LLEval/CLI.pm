@@ -64,6 +64,11 @@ sub run {
 
     if(not defined $source) {
         (my $file, @argv) = @{$self->extra_argv};
+        if(not defined $file) {
+            warn("No file specified.\n");
+            return -1;
+        }
+
         open my $in, '<', $file or confess("Cannot open '$file': $!");
         local $/;
         $source = <$in>;
