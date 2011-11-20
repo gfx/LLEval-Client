@@ -48,6 +48,9 @@ sub receiver {
     if($result->{status} != 0) {
         $r->send_reply("$languages{$lang} returned $result->{status}!!");
     }
+    if($result->{error}) {
+        $r->send_reply("error: $result->{error}");
+    }
     if(defined(my $s = $result->{stderr})) {
         $r->send_reply($_) for split /\n/, encode_utf8($s);
     }

@@ -5,6 +5,9 @@ use Mouse::Util::TypeConstraints;
 use MouseX::StrictConstructor;
 with 'MouseX::Getopt';
 
+use Encode::Locale;
+use Encode ();
+
 use LLEval;
 my $lleval = LLEval->new();
 
@@ -86,11 +89,13 @@ sub run {
     # TODO: pass @argv to lleval
     print STDERR $lleval->pretty({ s => $source, l => $lang })
         if $self->debug;
-    my $data = $lleval->call(s => $source, l => $lang);
+
+
+    my $data = $lleval->call_eval(Encode::decode(locale => $source), $lang);
     print STDERR $lleval->pretty($data) if $self->debug;
 
-    print STDOUT $data->{stdout};
-    print STDERR $data->{stderr};
+    print STDOUT Encode::encode( locale => $data->{stdout} );
+    print STDERR Encode::encode( locale => $data->{stderr} );
 
     return $data->{status};
 }

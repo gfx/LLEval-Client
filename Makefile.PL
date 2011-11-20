@@ -11,6 +11,7 @@ install_script 'lleval';
 requires 'Furl'         => 0.07;
 requires 'JSON';
 requires 'URI::Escape';
+requires 'Encode::Locale';
 
 requires 'Mouse'                     => 0.70;
 requires 'MouseX::StrictConstructor' => 0.02;
