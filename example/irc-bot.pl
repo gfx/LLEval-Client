@@ -34,7 +34,7 @@ sub receiver {
         if($src eq 'list') {
             $r->send_reply(join ' ', sort keys %languages);
         }
-        elsif($src =~/\A info \s+ (.+) /xms) {
+        elsif($src =~/\A info \s+ (\S+) /xms) {
             my $keyword = $1;
             my $command = $languages{$keyword};
             if(defined $command) {
