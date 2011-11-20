@@ -9,6 +9,10 @@ use Encode qw(encode_utf8 decode_utf8);
 use constant _DEBUG => $ENV{LLEVAL_BOT_DEBUG};
 use if _DEBUG, 'Data::Dumper';
 
+my($host, @channels) = @ARGV;
+
+$host //= 'irc.freenode.net';
+@channels = qw(#lleval) unless @channels;
 
 my $lleval = LLEval->new();
 
@@ -16,11 +20,10 @@ my %languages = %{$lleval->languages};
 my $langs     = '(?:' . join('|', map { quotemeta } keys %languages) . ')';
 
 my $irc = irc
-    'chat.freenode.net',
+    $host,
     nickname => 'lleval',
     channels => {
-        '#soozy'  => { },
-        '#lleval' => { },
+        map { $_ => +{ } } @channels,
     };
 
 sub receiver {
