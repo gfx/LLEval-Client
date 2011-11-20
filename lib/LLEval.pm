@@ -2,9 +2,9 @@ package LLEval;
 use 5.008_001;
 use Mouse;
 use MouseX::StrictConstructor;
-use JSON;
-use Furl;
-use URI::Escape qw(uri_escape_utf8);
+use JSON ();
+use Furl ();
+use URI::Escape qw(uri_escape);
 
 our $VERSION = '0.01';
 
@@ -42,8 +42,11 @@ sub call {
     my $path_query = $self->api_pathq_base . '?';
     while(my($key, $value) = each %args) {
         next unless defined $value;
+
+        utf8::encode($key);
+        utf8::encode($value);
         $path_query .= sprintf '&%s=%s',
-            uri_escape_utf8($key), uri_escape_utf8($value);
+            uri_escape($key), uri_escape($value);
     }
     #warn $path_query;
     my $res = $self->_furl->request(

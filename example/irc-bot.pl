@@ -4,7 +4,11 @@ use 5.14.0;
 use AnySan;
 use AnySan::Provider::IRC;
 use LLEval;
-use Data::Dumper;
+use Encode qw(encode_utf8 decode_utf8);
+
+use constant _DEBUG => $ENV{LLEVAL_BOT_DEBUG};
+use if _DEBUG, 'Data::Dumper';
+
 
 my $lleval = LLEval->new();
 
@@ -15,6 +19,7 @@ my $irc = irc
     'chat.freenode.net',
     nickname => 'lleval',
     channels => {
+        '#soozy'  => { },
         '#lleval' => { },
     };
 
@@ -23,27 +28,28 @@ sub receiver {
     my($lang, $src) = $r->message =~ /\A ($langs) \s+ (.+)/xms or return;
 
     say "$lang $src";
-    my $result = $lleval->call_eval($src, $lang);
+    my $result = $lleval->call_eval( decode_utf8($src), $lang );
 
-    say Data::Dumper->new([$result])
-            ->Indent(1)
-            ->Sortkeys(1)
-            ->Quotekeys(0)
-            ->Useqq(1)
-            ->Terse(1)
-            ->Dump();
-
-    # reply
-    if(defined(my $s = $result->{stdout})) {
-        $r->send_reply($_) for split /\n/, $s;
+    if(_DEBUG) {
+        say Data::Dumper->new([$result])
+                ->Indent(1)
+                ->Sortkeys(1)
+                ->Quotekeys(0)
+                ->Useqq(1)
+                ->Terse(1)
+                ->Dump();
     }
 
+    if(defined(my $s = $result->{stdout})) {
+        $r->send_reply($_) for split /\n/, encode_utf8($s);
+    }
 
+    # error?
     if($result->{status} != 0) {
         $r->send_reply("$languages{$lang} returned $result->{status}!!");
     }
     if(defined(my $s = $result->{stderr})) {
-        $r->send_reply($_) for split /\n/, $s;
+        $r->send_reply($_) for split /\n/, encode_utf8($s);
     }
 }
 
