@@ -45,7 +45,7 @@ sub receiver {
     }
 
     # error?
-    if(!$result->{status}) {
+    if($result->{status}) {
         $r->send_reply("$languages{$lang} returned $result->{status}!!");
     }
     if($result->{error}) {
