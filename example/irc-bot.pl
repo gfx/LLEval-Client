@@ -1,6 +1,6 @@
 #!perl -w
-use strict;
 use 5.10.0;
+use strict;
 use AnySan;
 use AnySan::Provider::IRC;
 use LLEval;
@@ -11,13 +11,13 @@ use if _DEBUG, 'Data::Dumper';
 
 my($host, @channels) = @ARGV;
 
-$host //= 'irc.freenode.net';
-@channels = qw(#lleval) unless @channels;
+$host ||= 'irc.freenode.net';
+@channels = ('#lleval') unless @channels;
 
 my $lleval = LLEval->new();
 
 my %languages = %{$lleval->languages};
-my $langs     = '(?:' . join('|', map { quotemeta } keys %languages) . ')';
+my $langs     = '(?:' . join('|', 'lleval', map { quotemeta } keys %languages) . ')';
 
 my $irc = irc
     $host,
@@ -29,6 +29,24 @@ my $irc = irc
 sub receiver {
     my($r) = @_;
     my($lang, $src) = $r->message =~ /\A ($langs) \s+ (.+)/xms or return;
+
+    if($lang eq 'lleval') {
+        if($src eq 'list') {
+            $r->send_reply(join ' ', sort keys %languages);
+        }
+        elsif($src =~/\A info \s+ (.+) /xms) {
+            my $keyword = $1;
+            my $command = $languages{$keyword};
+            if(defined $command) {
+                $r->send_reply("$keyword is executed by $command");
+            }
+        }
+        else {
+            $r->send_reply("lleval is provided by dankogai");
+            $r->send_reply("See http://colabv6.dan.co.jp/lleval.html for details");
+        }
+        return;
+    }
 
     say "$lang $src" if _DEBUG;
     my $result = $lleval->call_eval( decode_utf8($src), $lang );
