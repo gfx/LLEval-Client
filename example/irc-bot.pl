@@ -27,7 +27,7 @@ sub receiver {
     my($r) = @_;
     my($lang, $src) = $r->message =~ /\A ($langs) \s+ (.+)/xms or return;
 
-    say "$lang $src";
+    say "$lang $src" if _DEBUG;
     my $result = $lleval->call_eval( decode_utf8($src), $lang );
 
     if(_DEBUG) {
