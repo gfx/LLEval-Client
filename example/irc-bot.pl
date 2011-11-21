@@ -9,7 +9,7 @@ use Encode qw(encode_utf8 decode_utf8);
 use constant _DEBUG => $ENV{LLEVAL_BOT_DEBUG};
 use if _DEBUG, 'Data::Dumper';
 
-use constant MAX_LINE_LEN => 255;
+use constant MAX_LINE_LEN => 80;
 
 my($host, @channels) = @ARGV;
 
