@@ -83,7 +83,7 @@ sub receiver {
     }
 
     if(defined(my $s = $result->{stdout})) {
-        if(!/\S/) {
+        if($s !~ /\S/) {
             $s = '(nothing)';
         }
         do_reply($r, $s);
