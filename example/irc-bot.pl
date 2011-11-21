@@ -9,6 +9,8 @@ use Encode qw(encode_utf8 decode_utf8);
 use constant _DEBUG => $ENV{LLEVAL_BOT_DEBUG};
 use if _DEBUG, 'Data::Dumper';
 
+use constant MAX_LINE_LEN => 255;
+
 my($host, @channels) = @ARGV;
 
 $host ||= 'irc.freenode.net';
@@ -25,6 +27,12 @@ my $irc = irc
     channels => {
         map { $_ => +{ } } @channels,
     };
+
+sub cut {
+    my($line) = @_;
+    return $line if $line < MAX_LINE_LEN;
+    return substr $line, 0, MAX_LINE_LEN;
+}
 
 sub receiver {
     my($r) = @_;
@@ -66,18 +74,18 @@ sub receiver {
     }
 
     if(defined(my $s = $result->{stdout})) {
-        $r->send_reply($_) for split /\n/, encode_utf8($s);
+        $r->send_reply(cut $_) for split /\n/, encode_utf8($s);
     }
 
     # error?
     if($result->{status}) {
-        $r->send_reply("$languages{$lang} returned $result->{status}!!");
+        $r->send_reply(cut "$languages{$lang} returned $result->{status}!!");
     }
     if($result->{error}) {
-        $r->send_reply("error: $result->{error}");
+        $r->send_reply(cut "error: $result->{error}");
     }
     if(defined(my $s = $result->{stderr})) {
-        $r->send_reply($_) for split /\n/, encode_utf8($s);
+        $r->send_reply(cut $_) for split /\n/, encode_utf8($s);
     }
 }
 
