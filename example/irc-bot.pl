@@ -10,6 +10,7 @@ use constant _DEBUG => $ENV{LLEVAL_BOT_DEBUG};
 use if _DEBUG, 'Data::Dumper';
 
 use constant MAX_LINE_LEN => $ENV{LLEVAL_BOT_MAX_LINE_LEN} || 127;
+use constant MAX_LINES    => 3;
 
 my($host, @channels) = @ARGV;
 
@@ -31,7 +32,7 @@ my $irc = irc
 sub cut {
     my($line) = @_;
     return $line if length($line) < MAX_LINE_LEN;
-    return substr $line, 0, MAX_LINE_LEN;
+    return substr($line, 0, MAX_LINE_LEN) . '...';
 }
 
 sub receiver {
@@ -74,7 +75,13 @@ sub receiver {
     }
 
     if(defined(my $s = $result->{stdout})) {
-        $r->send_reply(cut $_) for split /\n/, encode_utf8($s);
+         my $i = 0;
+         for my $l(split /\n/, encode_utf8($s)) {
+             $r->send_reply(cut $_);
+             if(++$i > MAX_LINES) {
+                 $r->send_reply('...');
+             }
+         }
     }
 
     # error?
@@ -85,7 +92,13 @@ sub receiver {
         $r->send_reply(cut "error: $result->{error}");
     }
     if(defined(my $s = $result->{stderr})) {
-        $r->send_reply(cut $_) for split /\n/, encode_utf8($s);
+         my $i = 0;
+         for my $l(split /\n/, encode_utf8($s)) {
+             $r->send_reply(cut $_);
+             if(++$i > MAX_LINES) {
+                 $r->send_reply('...');
+             }
+         }
     }
 }
 
