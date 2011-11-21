@@ -10,7 +10,7 @@ use constant _DEBUG => $ENV{LLEVAL_BOT_DEBUG};
 use if _DEBUG, 'Data::Dumper';
 
 use constant MAX_LINE_LEN => $ENV{LLEVAL_BOT_MAX_LINE_LEN} || 127;
-use constant MAX_LINES    => 3;
+use constant MAX_LINES    => 5;
 
 my($host, @channels) = @ARGV;
 
@@ -55,12 +55,8 @@ sub receiver {
         if($src eq 'list') { # `lleval list`
             $r->send_reply(join ' ', sort keys %languages);
         }
-        elsif($src =~/\A \s+ (\S+) /xms) { # `lleval $lang`
-            my $keyword = $1;
-            my $command = $languages{$keyword};
-            if(defined $command) {
-                $r->send_reply("$keyword is executed by $command");
-            }
+        elsif(defined(my $command = $languages{$src})) { # `lleval $lang`
+            $r->send_reply("$src is executed by $command");
         }
         else { # `lleval`
             $r->send_reply("lleval is provided by dankogai");
@@ -87,14 +83,17 @@ sub receiver {
     }
 
     if(defined(my $s = $result->{stdout})) {
+        if(!/\S/) {
+            $s = '(nothing)';
+        }
         do_reply($r, $s);
     }
 
     if($result->{status}) {
         do_reply($r, "$languages{$lang} returned $result->{status}!!");
     }
-    if($result->{error}) {
-        do_reply($r, "error: $result->{error}");
+    if(defined(my $s = $result->{error})) {
+        do_reply($r, "error: $s");
     }
     if(defined(my $s = $result->{stderr})) {
         do_reply($r, $s);
