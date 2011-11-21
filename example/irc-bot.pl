@@ -35,6 +35,18 @@ sub cut {
     return substr($line, 0, MAX_LINE_LEN) . '...';
 }
 
+sub do_reply {
+    my($r, $s) = @_;
+    my $i = 0;
+    for my $l(split /\n/, encode_utf8($s)) {
+        $r->send_reply(cut $l);
+        if(++$i >= MAX_LINES) {
+            $r->send_reply('...');
+            last;
+        }
+    }
+}
+
 sub receiver {
     my($r) = @_;
     my($lang, $src) = $r->message =~ /\A ($langs) \s+ (.+)/xms or return;
@@ -75,13 +87,7 @@ sub receiver {
     }
 
     if(defined(my $s = $result->{stdout})) {
-         my $i = 0;
-         for my $l(split /\n/, encode_utf8($s)) {
-             $r->send_reply(cut $l);
-             if(++$i > MAX_LINES) {
-                 $r->send_reply('...');
-             }
-         }
+        do_reply($r, encode_utf8($s));
     }
 
     # error?
@@ -92,13 +98,7 @@ sub receiver {
         $r->send_reply(cut "error: $result->{error}");
     }
     if(defined(my $s = $result->{stderr})) {
-         my $i = 0;
-         for my $l(split /\n/, encode_utf8($s)) {
-             $r->send_reply(cut $l);
-             if(++$i > MAX_LINES) {
-                 $r->send_reply('...');
-             }
-         }
+        do_reply($r, encode_utf8($s));
     }
 }
 
