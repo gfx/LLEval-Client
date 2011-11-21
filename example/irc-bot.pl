@@ -31,17 +31,17 @@ sub receiver {
     my($lang, $src) = $r->message =~ /\A ($langs) \s+ (.+)/xms or return;
 
     if($lang eq 'lleval') {
-        if($src eq 'list') {
+        if($src eq 'list') { # `lleval list`
             $r->send_reply(join ' ', sort keys %languages);
         }
-        elsif($src =~/\A info \s+ (\S+) /xms) {
+        elsif($src =~/\A \s+ (\S+) /xms) { # `lleval $lang`
             my $keyword = $1;
             my $command = $languages{$keyword};
             if(defined $command) {
                 $r->send_reply("$keyword is executed by $command");
             }
         }
-        else {
+        else { # `lleval`
             $r->send_reply("lleval is provided by dankogai");
             $r->send_reply("See http://colabv6.dan.co.jp/lleval.html for details");
         }
@@ -49,9 +49,13 @@ sub receiver {
     }
 
     say "$lang $src" if _DEBUG;
+
+    if($lang eq 'pl') {
+        $src = 'use 5.12.0; use warnings; use autodie;' . $src;
+    }
     my $result = $lleval->call_eval( decode_utf8($src), $lang );
 
-    if(_DEBUG) {
+    if(_DEBUG && _DEBUG > 1) {
         say Data::Dumper->new([$result])
                 ->Indent(1)
                 ->Sortkeys(1)
