@@ -77,7 +77,7 @@ sub receiver {
     if(defined(my $s = $result->{stdout})) {
          my $i = 0;
          for my $l(split /\n/, encode_utf8($s)) {
-             $r->send_reply(cut $_);
+             $r->send_reply(cut $l);
              if(++$i > MAX_LINES) {
                  $r->send_reply('...');
              }
@@ -94,7 +94,7 @@ sub receiver {
     if(defined(my $s = $result->{stderr})) {
          my $i = 0;
          for my $l(split /\n/, encode_utf8($s)) {
-             $r->send_reply(cut $_);
+             $r->send_reply(cut $l);
              if(++$i > MAX_LINES) {
                  $r->send_reply('...');
              }
