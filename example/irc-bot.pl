@@ -87,18 +87,17 @@ sub receiver {
     }
 
     if(defined(my $s = $result->{stdout})) {
-        do_reply($r, encode_utf8($s));
+        do_reply($r, $s);
     }
 
-    # error?
     if($result->{status}) {
-        $r->send_reply(cut "$languages{$lang} returned $result->{status}!!");
+        do_reply($r, "$languages{$lang} returned $result->{status}!!");
     }
     if($result->{error}) {
-        $r->send_reply(cut "error: $result->{error}");
+        do_reply($r, "error: $result->{error}");
     }
     if(defined(my $s = $result->{stderr})) {
-        do_reply($r, encode_utf8($s));
+        do_reply($r, $s);
     }
 }
 
