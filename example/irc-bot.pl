@@ -30,7 +30,7 @@ my $irc = irc
 
 sub cut {
     my($line) = @_;
-    return $line if $line < MAX_LINE_LEN;
+    return $line if length($line) < MAX_LINE_LEN;
     return substr $line, 0, MAX_LINE_LEN;
 }
 
